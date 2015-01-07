@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 The Command Line Murders
 ========================
 
@@ -40,3 +41,9 @@ One way you can do this is with the command:
 To get started on how to use the command line, open cheatsheet.md or cheatsheet.pdf (from the command line, you can type 'nano cheatsheet.md').
 
 Don't use a text editor to view any files except these instructions, the cheatsheet, and hints.
+=======
+Murder_Case
+===========
+
+Use shell to navigate through the files and find useful info to solve the case
+>>>>>>> dd3c04189a76991d801aa6c930bfb3f81ace1d11
