@@ -1,0 +1,82 @@
+# Walk-through from Y.M.
+First of all, search for "CLUE" within the file Crimescene (grep 'CLUE' crimescene)
+And the result is as follows:
+CLUE: Footage from an ATM security camera is blurry but shows that the perpetrator is a tall male, at least 6'.
+CLUE: Found a wallet believed to belong to the killer: no ID, just loose change, and membership cards for AAA, Delta SkyMiles, the local library, and the Museum of Bash History. The cards are totally untraceable and have no name, for some reason.
+CLUE: Questioned the barista at the local coffee shop. He said a woman left right before they heard the shots. The name on her latte was Annabel, she had blond spiky hair and a New Zealand accent.
+
+Second, we need to find the female witness named Annabel (see CLUE 3). So search for 'Annabel' within the file people (grep 'Annabel' people)
+Result:
+Annabel Sun	F	26	Hart Place, line 40
+Oluwasegun Annabel	M	37	Mattapan Street, line 173
+Annabel Church	F	38	Buckingham Place, line 179
+Annabel Fuglsang	M	40	Haley Street, line 176
+
+Third, we know that the Annabel we want is a female, so discard the info about the two males. Then we go to the specific line in each street file for further clues.
+Annabel Sun: sed -n '40'p ./streets/Hart_Place
+Result: SEE INTERVIEW #47246024
+
+Annabel Church: sed -n '179'p ./streets/Buckingham_Place
+Result: SEE INTERVIEW #699607
+
+Fourth, we go to the two interview files and see what they say.
+Annabel Sun: cat interview-47246024
+Result: Ms. Sun has brown hair and is not from New Zealand.  Not the witness from the cafe.
+
+Annabel Church: cat interview-699607
+Result: Interviewed Ms. Church at 2:04 pm.  Witness stated that she did not see anyone she could identify as the shooter, that she ran away as soon as the shots were fired.
+        However, she reports seeing the car that fled the scene.  Describes it as a blue Honda, with a license plate that starts with "L337" and ends with "9"
+
+Fifth, we search the file vehicles for 'L337*9', 'Honda' and 'Blue'. (grep -A 5 'L337' vehicles | grep -A 3 'Honda' | grep -A 2 'Blue’). Note: -A 5 means print this line and the five lines after.
+Result:
+
+Color: Blue
+Owner: Erika Owens
+Height: 6'5"
+--
+Color: Blue
+Owner: Aron Pilhofer
+Height: 5'3"
+--
+Color: Blue
+Owner: Heather Billings
+Height: 5'2"
+--
+Color: Blue
+Owner: Joe Germuska
+Height: 6'2"
+--
+Color: Blue
+Owner: Jeremy Bowers
+Height: 6'1"
+--
+Color: Blue
+Owner: Jacqui Maher
+Height: 6'2"
+
+Sixth, we eliminate the ones below 6 feet, which gives ‘Erika Owens’, ‘Joe Germuska’, ‘Jeremy Bowers’ and ‘Jacqui Maher’. We then search for each of the four in the file people  
+grep "Erika Owens" people 
+Erika Owens	F	56	Trapelo Street, line 98
+
+grep "Jacqui" people 
+Jacqui Maher	F	40	Andover Road, line 224
+
+grep "Jeremy" people 
+Jeremy Bowers	M	34	Dunstable Road, line 284
+
+grep "Joe Germuska” people 
+Joe Germuska	M	65	Plainfield Street, line 275
+
+Seventh, take the names of the two males in the above list and search in the folder memberships (-R to search recursively within a directory)
+grep -R "Jeremy Bowers" ./memberships/
+./memberships//AAA:Jeremy Bowers
+./memberships//Delta_SkyMiles:Jeremy Bowers
+./memberships//Museum_of_Bash_History:Jeremy Bowers
+./memberships//Terminal_City_Library:Jeremy Bowers
+
+grep -R "Joe Germuska" ./memberships/
+./memberships//AAA:Joe Germuska
+./memberships//Terminal_City_Library:Joe Germuska
+
+Finally, remember that in the second CLUE, AAA, Delta, Museum and Library membership card were found therefore we can conclude that JEREMY BOWERS is the murderer. <checked>
+
